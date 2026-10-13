@@ -3,7 +3,7 @@
 Audit of `index.html` (KJV Prophecy Tracker, Genesis–Revelation), verified against the
 canonical KJV text and verse counts (`aruljohn/Bible-kjv`).
 
-**Status: audit complete, fixes applied on this branch (20 new rows across two passes).**
+**Status: audit complete, fixes applied (35 rows added across three passes).**
 
 ## Structural checks — all pass
 
@@ -11,9 +11,9 @@ canonical KJV text and verse counts (`aruljohn/Bible-kjv`).
 |---|---|
 | Books present | **66 / 66** |
 | Chapters present (a row for every chapter) | **1,189 / 1,189** — none missing, none out of range |
-| Passage citations valid (chapter & verse exist, no reversed ranges) | **2,285 rows checked — 0 invalid** |
+| Passage citations valid (chapter & verse exist, no reversed ranges) | **2,300 rows checked — 0 invalid** |
 | Duplicate rows / chapters holding both a real row and a placeholder | **0** |
-| Cross-references written inside the prose columns | **455 checked — 0 invalid** |
+| Cross-references written inside the prose columns | **0 invalid; every one resolves to real verses** |
 | Numeric claims in row text vs the verses cited | **0 factual errors** |
 | Contradictory statuses on a shared verse | **0** |
 | Script errors when the page loads (headless render) | **0** |
@@ -93,6 +93,100 @@ zero.
   splits of one passage into distinct predictions (e.g. Revelation 5:1–5 and 5:1–7). Only the
   Isaiah 61 case was a genuine conflict.
 
+## Third pass — deepening the major prophets (this round)
+
+The remaining gaps were found by listing every uncovered verse that carries an oracle
+formula ("I will", "thus saith the LORD", "behold, I am against thee") inside the long
+prophetic books, then discarding the matches that turned out not to be prophecies:
+ritual statute, human speech, temple-song devotion, false prophets' claims, and
+retrospective narrative. Fifteen genuine oracles remained.
+
+| Added | Subject |
+|---|---|
+| Jeremiah 6:9–21 | the remnant gleaned; fury poured out; houses and fields given to others; stumblingblocks laid |
+| Jeremiah 9:7–10 | God will melt and try his people; the land made waste |
+| Jeremiah 11:14 | God will refuse to hear the people's cry |
+| Jeremiah 15:13–14 | treasures given as spoil; the people carried into an unknown land |
+| Jeremiah 17:3–4 | substance and treasures to the spoil; serving enemies in a strange land |
+| Jeremiah 18:13–17 | scattered as with an east wind; the back and not the face |
+| Jeremiah 26:16–19 | Micah's oracle cited as precedent (*Restatement* of Micah 3:12, which is tracked) |
+| Jeremiah 35:17 | all the pronounced evil brought on Judah and Jerusalem |
+| Jeremiah 44:26–28 | the name no longer invoked in Egypt; the sword, the famine and the escaping remnant |
+| Jeremiah 51:20–24 | the battle axe breaking nations; recompense rendered to Babylon |
+| Ezekiel 22:13–16 | scattered among the heathen; filthiness consumed |
+| Ezekiel 23:46–49 | a company brought up to stone and slay; lewdness caused to cease |
+| Ezekiel 33:12–20 | the righteous who sins and the wicked who turns (*Conditional*) |
+| Isaiah 41:26–29 | declared beforehand; one given to Jerusalem that brings good tidings |
+| Isaiah 46:3–4 | the remnant borne and delivered even to old age |
+
+Coverage is now 2,300 rows, and every chapter that the method treats as prophetic has
+its named oracles listed.
+
+### Deliberately not added
+
+Many uncovered verses contained oracle vocabulary but are not prophecies under the stated
+method. The largest of these were checked individually and left alone:
+
+- **Ritual statute and covenant obligation** — Leviticus 18:4–6, 20:7–8, 26:1–2.
+- **Human speech, including Pharaoh's and Moses' negotiation** — Exodus 8:28–29, 9:28–29,
+  10:2–3; 2 Samuel 22:3–4; Ruth 3.
+- **Temple-song devotion rather than prediction** — Exodus 15:1–2; Psalms 18:1–3, 34:10–11,
+  41:1–3, 86:11–12, 118:10–12.
+- **False prophets' claims** — 1 Kings 22:11–12 and its parallel 2 Chronicles 18:10–11
+  (the true oracle in that chapter, Micaiah's, is tracked at 1 Kings 22:17–23).
+- **Declaration of sovereignty rather than forecast** — Isaiah 43:13, 45:18, 66:1–2.
+- **Hezekiah's own lament** — Isaiah 38:10–11, 15.
+
+## Reader feature added with this pass
+
+`kjv-verses.json` carries the KJV text for all 8,430 cited verses (1.2 MB raw, 375 KB
+gzipped) and is fetched only when a reader first opens a row, so the table still starts
+without it. Verified against the whole table: **all 1,805 rows that cite a passage resolve
+to stored text — 0 unresolved**. The panel degrades to a readable message if the file is
+unavailable, and the table keeps working.
+
+## Fourth pass — the checks are now automatic
+
+Everything this document did by hand is now a script, because the tooling lived only in a
+scratch directory and would have been lost.
+
+`tools/audit.mjs` runs with no dependencies and no network, and fails on:
+
+- a book or chapter with no row and no pack declaring it
+- a declared chapter count that disagrees with the Bible
+- a citation to a chapter or verse that does not exist, or a reversed range
+- a reference in the commentary columns that points nowhere
+- a chapter holding both a real row and an auto-fill placeholder
+- a repeated passage, or several "no prophecy" rows in one chapter
+- one verse described as both past and future
+- a cited verse with no text in `kjv-verses.json`
+
+It was tested by mutating the tracker in seven ways and confirming each one fails the run.
+Two of those mutations caught bugs **in the audit itself**: a mistyped placeholder string
+that made the placeholder check a no-op, and a mishandled sub-verse split that reported the
+deliberate `61:2a` / `61:2b` division as a contradiction. Both are fixed, and the real
+Isaiah 61 split is now reported as an accepted warning rather than a failure.
+
+`tools/scan-oracles.mjs` carries the sweep that found the original gaps — chapters
+catalogued as having no prophecy whose text still contains oracle wording. It is advisory:
+it currently lists 53 chapters to review, mostly statute and human speech.
+
+## Also in this round: paging, so the table stays fast
+
+Rebuilding all 2,300 rows on every interaction cost roughly half a second and put 21,061
+elements in the DOM. The table now draws 200 rows at a time.
+
+| | Before | After |
+|---|---|---|
+| Initial parse and build | 4,334 ms | **878 ms** |
+| Deliberate interaction (select, sort) | 535–699 ms | **26–82 ms** |
+| DOM elements | 21,061 | **2,173** |
+| Table markup | 1,354 KB | **144 KB** |
+
+Paging did not weaken any check: the summary counters and the CSV export still describe
+every row the filters match, printing draws all matching rows, and the whole-table audits
+above were re-run with the table set to "All" and still pass.
+
 ## Remaining notes — not gaps
 
 - **Numbers 9:12** (the "no bone broken" detail, John 19:36) — typology, which the stated
@@ -109,13 +203,9 @@ zero.
   and Numbers 15:22 (statute), 1 Kings 12:24 and 2 Chronicles 11:2–4 (a command restraining
   the war, and a statement that the division was God's doing rather than a new prediction),
   Ezekiel 1:3 (call narrative), Jonah 1:1 (commission) and Zechariah 7 (retrospective).
-- **Depth of coverage.** Within long prophetic chapters the tracker is curated rather than
-  exhaustive: it lists representative oracles per chapter, not every verse. Uncovered
-  divine-prediction blocks remaining after this pass are small (2–4 verses) and largely
-  restate themes already carried by a neighbouring row — the largest are Jeremiah 9:22–25,
-  Jeremiah 6:11–16 and Isaiah 66:1–2. Expanding to full verse-by-verse saturation would add
-  well over a hundred rows across Jeremiah, Ezekiel and Isaiah, so it was left as a curation
-  decision rather than applied.
+- **Depth of coverage.** The third pass listed the named oracles in the long prophetic
+  books. What remains uncovered within a tracked chapter is, on inspection, material the
+  method excludes (see "Deliberately not added" above) rather than missing prophecy.
 
 ## Re-running the audit
 
