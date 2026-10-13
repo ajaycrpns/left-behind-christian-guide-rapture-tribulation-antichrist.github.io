@@ -1,0 +1,62 @@
+# Verifies the tracker's data on every push and pull request.
+#
+# Catches the mistake classes that have actually occurred here: chapters
+# left to an auto-fill placeholder while a parallel passage is tracked
+# elsewhere, citations to verses that do not exist, commentary that points
+# at the wrong reference, one verse described as both past and future, and
+# verse text that has drifted from the rows.
+#
+# tools/audit.mjs has no dependencies, so this needs no install step.
+
+name: Audit tracker data
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check the tracker data
+        run: node tools/audit.mjs
+
+      # Proves the audit above still catches what it is for. It breaks a
+      # copy of the tracker in each of a dozen ways and expects a failure
+      # every time, so a check that quietly stops working is caught here
+      # rather than by a reader.
+      - name: Check that the audit still catches known mistakes
+        run: node tools/test-gate.mjs
+
+      # Regenerate the verse text into a scratch file and compare it with the
+      # committed copy. This catches drift in both directions: a citation
+      # added without regenerating, and verses left behind after a row is
+      # re-passaged or removed.
+      - name: Check that the verse text is current
+        run: |
+          node tools/build-verse-text.mjs --out /tmp/kjv-verses.regen.json
+
+          if cmp -s /tmp/kjv-verses.regen.json kjv-verses.json; then
+            echo "kjv-verses.json is current"
+          else
+            echo "::error::kjv-verses.json is out of date — run: node tools/build-verse-text.mjs"
+            echo
+            echo "size committed : $(wc -c < kjv-verses.json) bytes"
+            echo "size regenerated: $(wc -c < /tmp/kjv-verses.regen.json) bytes"
+            exit 1
+          fi
+
+      # Optional and advisory: flags chapters catalogued as having no explicit
+      # prophecy whose text still contains a strong oracle formula. Needs
+      # network; a failure to download only skips the check.
+      - name: Advisory sweep for missed oracles
+        continue-on-error: true
+        run: node tools/scan-oracles.mjs
