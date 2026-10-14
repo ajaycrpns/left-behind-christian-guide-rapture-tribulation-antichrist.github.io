@@ -28,16 +28,23 @@ const INDEX = path.join(ROOT, 'index.html');
 const STRUCTURE = path.join(ROOT, 'tools/kjv-structure.json');
 const VERSES = path.join(ROOT, 'kjv-verses.json');
 
-const html = fs.readFileSync(INDEX, 'utf8');
-const structure = JSON.parse(fs.readFileSync(STRUCTURE, 'utf8'));
-const cited = fs.existsSync(VERSES)
-  ? JSON.parse(fs.readFileSync(VERSES, 'utf8'))
-  : null;
-
 const errors = [];
 const warnings = [];
 const fail = message => errors.push(message);
 const warn = message => warnings.push(message);
+
+const html = fs.readFileSync(INDEX, 'utf8');
+const structure = JSON.parse(fs.readFileSync(STRUCTURE, 'utf8'));
+let cited = null;
+let citedInvalid = false;
+if (fs.existsSync(VERSES)) {
+  try {
+    cited = JSON.parse(fs.readFileSync(VERSES, 'utf8'));
+  } catch (error) {
+    citedInvalid = true;
+    fail(`kjv-verses.json is not valid JSON (${error.message}) — re-run tools/build-verse-text.mjs`);
+  }
+}
 
 /* ---------------------------------------------------------------
  * 1. read the rows straight out of index.html
@@ -280,11 +287,13 @@ let proseCount = 0;
 
 for (const row of rows) {
   const prose = [row.prophecy, row.category, row.status, row.fulfillment].join(' ');
+  let rowRefs = 0;
 
   for (const m of prose.matchAll(proseRef)) {
     const book = m[1] === 'Psalm' ? 'Psalms' : m[1];
     if (!canonicalChapters[book]) continue;
     proseCount++;
+    rowRefs++;
 
     const chapter = +m[2];
     const from = +m[3];
@@ -305,6 +314,59 @@ for (const row of rows) {
 
     if (endChapter < chapter || (endChapter === chapter && to < from)) {
       fail(`${row.book} ${row.chapter}: commentary reverses the range ${m[0]}`);
+    }
+  }
+
+  if (row.category !== 'No explicit prophecy' && rowRefs === 0) {
+    fail(`${row.book} ${row.chapter} (${row.passage}) has no cross-references in its commentary`);
+  }
+
+  if (row.category !== 'No explicit prophecy') {
+    const xrefMarker = ' Cross-references: ';
+    const concMarker = ' Concordances: ';
+    const xrefIdx = row.fulfillment.indexOf(xrefMarker);
+    const concIdx = row.fulfillment.indexOf(concMarker);
+    const coveredByVerse = new Map();
+    const concByVerse = new Map();
+
+    if (xrefIdx !== -1) {
+      const end = concIdx !== -1 ? concIdx : row.fulfillment.length;
+      const raw = row.fulfillment.slice(xrefIdx + xrefMarker.length, end).replace(/\.$/, '');
+      for (const item of raw.split('; ')) {
+        const arrow = item.indexOf(' → ');
+        if (arrow === -1) continue;
+        const cv = item.slice(0, arrow).trim();
+        const refs = [...item.slice(arrow + 3).matchAll(proseRef)];
+        coveredByVerse.set(cv, refs.length);
+      }
+    }
+
+    if (concIdx !== -1) {
+      const raw = row.fulfillment.slice(concIdx + concMarker.length).replace(/\.$/, '');
+      for (const item of raw.split('; ')) {
+        const arrow = item.indexOf(' → ');
+        if (arrow === -1) continue;
+        const cv = item.slice(0, arrow).trim();
+        const words = item.slice(arrow + 3).split(', ').map(w => w.trim()).filter(Boolean);
+        concByVerse.set(cv, words.length);
+      }
+    } else {
+      fail(`${row.book} ${row.chapter} (${row.passage}) has no concordances in its commentary`);
+    }
+
+    for (const span of parseSpans(row.book, row.chapter, row.passage)) {
+      const { chapter, from, to } = spanKey(span, row.book);
+      for (let v = from; v <= to; v++) {
+        const cv = `${chapter}:${v}`;
+        const count = coveredByVerse.get(cv) ?? 0;
+        if (count < 2) {
+          fail(`${row.book} ${cv} (in passage "${row.passage}") has ${count} cross-references in commentary (expected at least 2)`);
+        }
+        const concCount = concByVerse.get(cv) ?? 0;
+        if (concCount < 2) {
+          fail(`${row.book} ${cv} (in passage "${row.passage}") has ${concCount} concordances in commentary (expected at least 2)`);
+        }
+      }
     }
   }
 }
@@ -404,9 +466,36 @@ for (const [, list] of byChapter) {
  * 8. the verse text must still cover every citation
  * --------------------------------------------------------------- */
 
-if (!cited) {
+if (!cited && !citedInvalid) {
   warn('kjv-verses.json is missing, so the verse panel has no text to show');
-} else {
+} else if (cited) {
+  for (const [book, chapters] of Object.entries(cited)) {
+    for (const [chapter, list] of Object.entries(chapters)) {
+      if (!Array.isArray(list)) continue;
+      for (let i = 1; i < list.length; i++) {
+        if (list[i][0] <= list[i - 1][0]) {
+          fail(`${book} ${chapter} in kjv-verses.json is not in ascending verse order (${list[i - 1][0]} before ${list[i][0]}) — re-run tools/build-verse-text.mjs`);
+          break;
+        }
+      }
+      for (const pair of list) {
+        if (!Array.isArray(pair[2]) || pair[2].length < 2) {
+          fail(`${book} ${chapter}:${pair[0]} has fewer than 2 cross-references in kjv-verses.json — re-run tools/build-verse-text.mjs`);
+          break;
+        }
+        if (!Array.isArray(pair[3]) || pair[3].length < 2) {
+          fail(`${book} ${chapter}:${pair[0]} has fewer than 2 concordances in kjv-verses.json — re-run tools/build-verse-text.mjs`);
+          break;
+        }
+        const lowerText = String(pair[1] || '').toLowerCase();
+        if (pair[3].some(w => !lowerText.includes(String(w).toLowerCase()))) {
+          fail(`${book} ${chapter}:${pair[0]} has a concordance word not present in its verse text — re-run tools/build-verse-text.mjs`);
+          break;
+        }
+      }
+    }
+  }
+
   const wanted = new Set();
 
   for (const row of rows) {

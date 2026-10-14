@@ -88,6 +88,36 @@ const MUTATIONS = [
   },
 
   {
+    name: 'the verse text stores verses out of ascending order',
+    file: 'kjv-verses.json',
+    expect: /not in ascending verse order/,
+    json: data => {
+      data.Genesis['3'].reverse();
+      return data;
+    }
+  },
+
+  {
+    name: 'a verse in kjv-verses.json is missing its cross-references',
+    file: 'kjv-verses.json',
+    expect: /fewer than 2 cross-references in kjv-verses\.json/,
+    json: data => {
+      data.Genesis['1'][0][2] = [];
+      return data;
+    }
+  },
+
+  {
+    name: 'a verse in kjv-verses.json is missing its concordances',
+    file: 'kjv-verses.json',
+    expect: /fewer than 2 concordances in kjv-verses\.json/,
+    json: data => {
+      data.Genesis['1'][0][3] = [];
+      return data;
+    }
+  },
+
+  {
     name: 'a row drops its sub-verse letter, contradicting a real row',
     file: 'index.html',
     find: '"61:1\u20132a \u2014 the acceptable year"',
@@ -145,6 +175,22 @@ const MUTATIONS = [
     find: 'Genesis 49:33\u201350:1',
     replace: 'Genesis 51:1',
     expect: /Genesis 51/
+  },
+
+  {
+    name: 'a prophecy row has no cross-references in its commentary',
+    file: 'index.html',
+    find: '"The judgment is imposed immediately. Its literal and symbolic dimensions are interpreted differently. Cross-references: 3:14 \u2192 Deuteronomy 28:15, Psalms 72:9. Concordances: 3:14 \u2192 serpent, belly, cursed."',
+    replace: '"The judgment is imposed immediately. Its literal and symbolic dimensions are interpreted differently. Concordances: 3:14 \u2192 serpent, belly, cursed."',
+    expect: /Genesis 3 \(3:14\) has no cross-references/
+  },
+
+  {
+    name: 'a prophecy row has no concordances in its commentary',
+    file: 'index.html',
+    find: '"The judgment is imposed immediately. Its literal and symbolic dimensions are interpreted differently. Cross-references: 3:14 \u2192 Deuteronomy 28:15, Psalms 72:9. Concordances: 3:14 \u2192 serpent, belly, cursed."',
+    replace: '"The judgment is imposed immediately. Its literal and symbolic dimensions are interpreted differently. Cross-references: 3:14 \u2192 Deuteronomy 28:15, Psalms 72:9."',
+    expect: /Genesis 3 \(3:14\) has no concordances/
   },
 
   {
