@@ -10,7 +10,7 @@ covering all 66 books of the King James Bible from Genesis 1 to Revelation 22.
 
 - **2,300 rows across 66 books / 1,189 chapters** — every chapter of the Bible is
   represented. Chapters with no explicit prophecy say so rather than being skipped.
-- **7 View Modes + Study Utilities (`#viewModeBar`)**:
+- **8 View Modes + Study Utilities (`#viewModeBar`)**:
   - **📊 Prophecy Tracker:** Full filterable table with 8 interactive summary cards,
     search scope selector, canon section filter, book/chapter/theme filters, multi-select
     status category checkboxes + presets, and 9 quick filter/display checkboxes.
@@ -35,6 +35,13 @@ covering all 66 books of the King James Bible from Genesis 1 to Revelation 22.
     Fulfillment/Parallel cards with the full KJV verse text of both passages rendered side by side
     (25 curated Landmark Messianic & Apocalyptic Harmonies + all dynamic OT-to-NT pairs) and
     **📄 Markdown Study Guide (`.md`) download**.
+  - **🏛️ 4-View Eschatology Comparison:** Side-by-side comparison of the **4 Historic Christian
+    Interpretive Traditions** (**🔮 Futurist**, **🏛️ Preterist**, **📜 Historicist**, and **🕊️ Idealist**)
+    plus **🤝 Historic Christian Consensus** across 16 major prophetic and apocalyptic passages
+    (*Daniel 2, 7, 9:24–27, 11–12; Matthew 24 Olivet Discourse; 1 Thessalonians 4 Rapture;
+    2 Thessalonians 2 Man of Sin; Revelation Seals, 144,000, Trumpets, Two Witnesses, Woman &
+    Dragon, Beast 666, Vials & Armageddon, Mystery Babylon, and the 1,000-Year Millennium*),
+    with clickable KJV references and **📄 Markdown 4-View Guide (`.md`) download**.
   - **🗺️ Study Hub & Heatmap:** Interactive 66-Book Prophetic Density Heatmap & Top 18
     Prophetic Chapters Leaderboard, 4 checkable Guided Prophetic Study Plans (with **📄 Markdown
     Study Plans handout download**), and a Personal Study Workspace (⭐ Bookmarks, 📝 Personal

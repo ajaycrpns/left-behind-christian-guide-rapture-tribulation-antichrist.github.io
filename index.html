@@ -345,6 +345,7 @@
     .workspace-grid.mode-tracker #concordanceSection,
     .workspace-grid.mode-tracker #timelineSection,
     .workspace-grid.mode-tracker #harmonySection,
+    .workspace-grid.mode-tracker #eschatologySection,
     .workspace-grid.mode-tracker #studyHubSection {
       display: none;
     }
@@ -352,6 +353,7 @@
     .workspace-grid.mode-bible #concordanceSection,
     .workspace-grid.mode-bible #timelineSection,
     .workspace-grid.mode-bible #harmonySection,
+    .workspace-grid.mode-bible #eschatologySection,
     .workspace-grid.mode-bible #studyHubSection {
       display: none;
     }
@@ -359,12 +361,14 @@
     .workspace-grid.mode-concordance #bibleModeSection,
     .workspace-grid.mode-concordance #timelineSection,
     .workspace-grid.mode-concordance #harmonySection,
+    .workspace-grid.mode-concordance #eschatologySection,
     .workspace-grid.mode-concordance #studyHubSection {
       display: none;
     }
     .workspace-grid.mode-split #concordanceSection,
     .workspace-grid.mode-split #timelineSection,
     .workspace-grid.mode-split #harmonySection,
+    .workspace-grid.mode-split #eschatologySection,
     .workspace-grid.mode-split #studyHubSection {
       display: none;
     }
@@ -372,6 +376,7 @@
     .workspace-grid.mode-timeline #bibleModeSection,
     .workspace-grid.mode-timeline #concordanceSection,
     .workspace-grid.mode-timeline #harmonySection,
+    .workspace-grid.mode-timeline #eschatologySection,
     .workspace-grid.mode-timeline #studyHubSection {
       display: none;
     }
@@ -379,14 +384,24 @@
     .workspace-grid.mode-harmony #bibleModeSection,
     .workspace-grid.mode-harmony #concordanceSection,
     .workspace-grid.mode-harmony #timelineSection,
+    .workspace-grid.mode-harmony #eschatologySection,
     .workspace-grid.mode-harmony #studyHubSection {
+      display: none;
+    }
+    .workspace-grid.mode-eschatology #trackerPane,
+    .workspace-grid.mode-eschatology #bibleModeSection,
+    .workspace-grid.mode-eschatology #concordanceSection,
+    .workspace-grid.mode-eschatology #timelineSection,
+    .workspace-grid.mode-eschatology #harmonySection,
+    .workspace-grid.mode-eschatology #studyHubSection {
       display: none;
     }
     .workspace-grid.mode-studyhub #trackerPane,
     .workspace-grid.mode-studyhub #bibleModeSection,
     .workspace-grid.mode-studyhub #concordanceSection,
     .workspace-grid.mode-studyhub #timelineSection,
-    .workspace-grid.mode-studyhub #harmonySection {
+    .workspace-grid.mode-studyhub #harmonySection,
+    .workspace-grid.mode-studyhub #eschatologySection {
       display: none;
     }
     .workspace-grid.mode-split {
@@ -1531,6 +1546,10 @@
     body[data-active-mode="harmony"] .controls,
     body[data-active-mode="harmony"] .filter-panels,
     body[data-active-mode="harmony"] .notice,
+    body[data-active-mode="eschatology"] .summary,
+    body[data-active-mode="eschatology"] .controls,
+    body[data-active-mode="eschatology"] .filter-panels,
+    body[data-active-mode="eschatology"] .notice,
     body[data-active-mode="studyhub"] .summary,
     body[data-active-mode="studyhub"] .controls,
     body[data-active-mode="studyhub"] .filter-panels,
@@ -1541,6 +1560,7 @@
     body[data-active-mode="concordance"] #toggleFiltersBtn,
     body[data-active-mode="timeline"] #toggleFiltersBtn,
     body[data-active-mode="harmony"] #toggleFiltersBtn,
+    body[data-active-mode="eschatology"] #toggleFiltersBtn,
     body[data-active-mode="studyhub"] #toggleFiltersBtn {
       display: none !important;
     }
@@ -1771,6 +1791,129 @@
     html[data-theme="dark"] .harmony-pane-nt .harmony-verse-box {
       background: rgba(22, 101, 52, 0.22);
       border-left-color: #4ade80;
+    }
+
+    /* 4-View Eschatology Comparison Grid */
+    .eschatology-legend-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+    }
+    .eschatology-legend-card {
+      padding: 10px 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--blue);
+      border-radius: 8px;
+      font-size: 12.5px;
+      line-height: 1.45;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .eschatology-legend-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+    }
+    .eschatology-legend-card.active {
+      box-shadow: 0 0 0 2px var(--blue);
+      background: #eff6ff;
+    }
+    .eschatology-legend-card.trad-futurist { border-top-color: #ea580c; }
+    .eschatology-legend-card.trad-preterist { border-top-color: #0284c7; }
+    .eschatology-legend-card.trad-historicist { border-top-color: #7c3aed; }
+    .eschatology-legend-card.trad-idealist { border-top-color: #16a34a; }
+    .eschatology-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-bottom: 1px solid var(--border);
+    }
+    .eschatology-grid-1 {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+    .eschatology-view-col {
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.55;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .eschatology-view-col + .eschatology-view-col {
+      border-left: 1px solid var(--border);
+    }
+    .eschatology-view-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      font-weight: bold;
+      font-size: 12.5px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .eschatology-view-col.col-futurist .eschatology-view-head { color: #c2410c; border-bottom-color: #fdba74; }
+    .eschatology-view-col.col-preterist .eschatology-view-head { color: #0369a1; border-bottom-color: #7dd3fc; }
+    .eschatology-view-col.col-historicist .eschatology-view-head { color: #6d28d9; border-bottom-color: #c4b5fd; }
+    .eschatology-view-col.col-idealist .eschatology-view-head { color: #15803d; border-bottom-color: #86efac; }
+    .eschatology-consensus-box {
+      padding: 10px 14px;
+      font-size: 13px;
+      background: #f0fdf4;
+      color: #14532d;
+      border-top: 1px solid #bbf7d0;
+    }
+    @media screen and (max-width: 1100px) {
+      .eschatology-legend-grid,
+      .eschatology-grid-4 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .eschatology-view-col:nth-child(3) {
+        border-left: 0;
+      }
+      .eschatology-view-col:nth-child(3),
+      .eschatology-view-col:nth-child(4) {
+        border-top: 1px solid var(--border);
+      }
+    }
+    @media screen and (max-width: 680px) {
+      .eschatology-legend-grid,
+      .eschatology-grid-4 {
+        grid-template-columns: 1fr;
+      }
+      .eschatology-view-col + .eschatology-view-col {
+        border-left: 0;
+        border-top: 1px solid var(--border);
+      }
+    }
+    html[data-theme="dark"] .eschatology-legend-grid {
+      background: #0f172a;
+      border-color: #334155;
+    }
+    html[data-theme="dark"] .eschatology-legend-card {
+      background: #1e293b;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+    html[data-theme="dark"] .eschatology-legend-card.active {
+      background: #1e3a8a;
+      box-shadow: 0 0 0 2px #60a5fa;
+    }
+    html[data-theme="dark"] .eschatology-view-col + .eschatology-view-col {
+      border-color: #334155;
+    }
+    html[data-theme="dark"] .eschatology-view-col.col-futurist .eschatology-view-head { color: #fdba74; border-bottom-color: #9a3412; }
+    html[data-theme="dark"] .eschatology-view-col.col-preterist .eschatology-view-head { color: #7dd3fc; border-bottom-color: #075985; }
+    html[data-theme="dark"] .eschatology-view-col.col-historicist .eschatology-view-head { color: #ddd6fe; border-bottom-color: #5b21b6; }
+    html[data-theme="dark"] .eschatology-view-col.col-idealist .eschatology-view-head { color: #86efac; border-bottom-color: #166534; }
+    html[data-theme="dark"] .eschatology-consensus-box {
+      background: rgba(20, 83, 45, 0.35);
+      color: #dcfce7;
+      border-top-color: #166534;
     }
 
     /* Features 3, 4, 5 & 6: Study Hub, 66-Book Heatmap, Study Plans, Bookmarks, Notes & Toast */
@@ -2409,6 +2552,9 @@
       <button type="button" class="view-mode-btn" data-view-mode="harmony" role="tab" aria-selected="false">
         🔗 OT↔NT Harmony
       </button>
+      <button type="button" class="view-mode-btn" data-view-mode="eschatology" role="tab" aria-selected="false">
+        🏛️ 4-View Eschatology
+      </button>
       <button type="button" class="view-mode-btn" data-view-mode="studyhub" role="tab" aria-selected="false">
         🗺️ Study Hub &amp; Heatmap
       </button>
@@ -2861,6 +3007,34 @@
       </div>
       <div id="harmonyBanner" class="bible-chapter-banner"></div>
       <div id="harmonyListBody" class="harmony-list"></div>
+    </section>
+    <section id="eschatologySection" class="feature-section" aria-label="4-View Eschatology &amp; Apocalyptic Interpretive Comparison">
+      <div class="feature-toolbar">
+        <input id="eschatologySearchInput" type="search"
+               placeholder="Search apocalyptic passages, symbols, or views (e.g., '70 weeks', 'abomination', 'rapture', '666', 'babylon', 'millennium')..."
+               aria-label="Search 4-view eschatology comparison">
+        <select id="eschatologyTopicSelect" aria-label="Filter eschatology passages by book or topic">
+          <option value="all">All 16 Major Prophetic &amp; Apocalyptic Passages</option>
+          <option value="daniel">Book of Daniel (Empires, Little Horn &amp; 70 Weeks)</option>
+          <option value="olivet-paul">Olivet Discourse, Rapture &amp; Man of Sin (Matt 24, 1–2 Thess)</option>
+          <option value="revelation">Revelation 6–18 (Seals, Trumpets, Witnesses, Beast 666 &amp; Babylon)</option>
+          <option value="millennium">Revelation 19–22 (Second Coming, 1,000-Year Millennium &amp; Eternity)</option>
+        </select>
+        <select id="eschatologyTraditionSelect" aria-label="Focus on a specific interpretive tradition">
+          <option value="all">Compare All 4 Views Side-by-Side</option>
+          <option value="futurist">🔮 Focus: Futurist View (Premillennial / End-Times)</option>
+          <option value="preterist">🏛️ Focus: Preterist View (1st-Century / AD 70 &amp; Rome)</option>
+          <option value="historicist">📜 Focus: Historicist View (Church-Age Panorama)</option>
+          <option value="idealist">🕊️ Focus: Idealist View (Timeless Spiritual Conflict)</option>
+        </select>
+        <button id="eschatologyResetBtn" type="button">Reset</button>
+        <button id="eschatologyExportBtn" type="button" class="primary-button" title="Download all 4-View Eschatology Comparisons as a Markdown study guide">
+          📄 Download 4-View Guide (.md)
+        </button>
+      </div>
+      <div id="eschatologyTraditionLegend" class="eschatology-legend-grid"></div>
+      <div id="eschatologyBanner" class="bible-chapter-banner"></div>
+      <div id="eschatologyListBody" class="harmony-list"></div>
     </section>
     <section id="studyHubSection" class="feature-section" aria-label="Prophetic Heatmap, Guided Study Plans &amp; Personal Study Workspace">
       <div class="studyhub-subtabs" role="tablist">
@@ -22607,6 +22781,7 @@
         "mode-concordance",
         "mode-timeline",
         "mode-harmony",
+        "mode-eschatology",
         "mode-studyhub"
       );
       workspaceGrid.classList.add("mode-" + mode);
@@ -22625,6 +22800,8 @@
       if (typeof renderTimelineMode === "function") renderTimelineMode();
     } else if (mode === "harmony") {
       if (typeof renderHarmonyMode === "function") renderHarmonyMode();
+    } else if (mode === "eschatology") {
+      if (typeof renderEschatologyMode === "function") renderEschatologyMode();
     } else if (mode === "studyhub") {
       if (typeof renderStudyHubMode === "function") renderStudyHubMode();
     }
@@ -24148,6 +24325,426 @@
   }
 
   /*
+   * 4-View Eschatology & Apocalyptic Interpretive Comparison Guide
+   * (Futurist · Preterist · Historicist · Idealist)
+   */
+  const ESCHATOLOGY_TRADITIONS = [
+    {
+      key: "futurist",
+      badge: "🔮 Futurist",
+      title: "Futurist View (Premillennial / End-Times)",
+      summary: "Reads Daniel's 70th Week, the Great Tribulation, the personal Antichrist/Beast, Revelation 6–19, and the 1,000-Year Millennium (Rev 20) as literal end-time events preceding the Eternal State."
+    },
+    {
+      key: "preterist",
+      badge: "🏛️ Preterist",
+      title: "Preterist View (Partial / 1st-Century AD 70 & Rome)",
+      summary: "Sees Daniel, the Olivet Discourse (Matt 24), and much of Revelation 4–19 fulfilled in the AD 70 destruction of Jerusalem and the Roman Empire, while affirming Christ's future bodily return and final resurrection."
+    },
+    {
+      key: "historicist",
+      badge: "📜 Historicist",
+      title: "Historicist View (Continuous Church-Age Panorama)",
+      summary: "Views Daniel and Revelation as a chronological prophetic history unfolding across the entire Church Age—from pagan Rome through medieval Christendom, the Reformation, and culminating in the Second Advent."
+    },
+    {
+      key: "idealist",
+      badge: "🕊️ Idealist",
+      title: "Idealist / Spiritual View (Timeless Cosmic Conflict)",
+      summary: "Interprets apocalyptic visions as recurring theological patterns of the spiritual warfare between Christ's Church and Satanic world systems throughout the inter-advent age until Christ's final triumph."
+    }
+  ];
+
+  const ESCHATOLOGY_COMPARISONS = [
+    {
+      topic: "daniel",
+      title: "1. Nebuchadnezzar's Image & the Stone Cut Without Hands",
+      ref: { book: "Daniel", ch: 2, from: 31, to: 45, label: "Daniel 2:31–45" },
+      cat: "Partial / ongoing",
+      futurist: "Gold = Babylon; Silver = Medo-Persia; Brass = Greece; Iron = Rome; Ten Toes of iron/clay = a future revived end-time ten-king coalition (cf. Rev 17:12) shattered instantaneously by Christ's visible Second Coming to establish His millennial kingdom (Dan 2:44).",
+      preterist: "The four empires are Babylon, Medo-Persia, Greece, and 1st-century Imperial Rome. In the days of those Roman kings (Dan 2:44), Christ's First Advent, Cross, Resurrection, and Pentecost inaugurated the indestructible spiritual Kingdom of God that grows to fill the earth.",
+      historicist: "Babylon, Medo-Persia, Greece, and Imperial Rome, followed by the divided kingdoms of post-Roman Europe (iron and clay mingled since the 5th century AD), which persist until Christ's final return smites human empires.",
+      idealist: "The statue represents the succession and fragility of all idolatrous human empires across history, contrasted with the Stone—Christ's heavenly kingdom—which progressively overcomes every earthly dominion and consummates at the Last Day.",
+      consensus: "All four views identify the first three empires as Babylon, Medo-Persia (Dan 8:20), and Greece (Dan 8:21), and affirm that the Stone cut without hands is the eternal, indestructible Kingdom of the Messiah."
+    },
+    {
+      topic: "daniel",
+      title: "2. Four Beasts from the Sea, the Little Horn & the Son of Man",
+      ref: { book: "Daniel", ch: 7, from: 13, to: 27, label: "Daniel 7:13–27 (cf. Dan 7:1–12)" },
+      cat: "Disputed",
+      futurist: "The fourth beast is Rome and its end-time ten-king form; the Little Horn (Dan 7:8, 24–25) is the future personal Antichrist who persecutes the saints for 3½ literal years ('a time and times and the dividing of time') until judged at the Son of Man's Second Coming (Rev 13:5–7; 19:20).",
+      preterist: "The fourth beast is 1st-century Rome (or Seleucid/Herodian-Roman power); the Son of Man's coming 'with the clouds of heaven' TO the Ancient of Days (Dan 7:13–14) depicts Christ's Ascension and enthronement (Acts 1:9; Matt 28:18), vindicated in the AD 70 judgment.",
+      historicist: "The ten horns are the ten kingdoms arising from fallen Western Rome; the Little Horn represents the medieval papal-political system exercising authority for 1,260 prophetic years (year-day principle, Dan 7:25) until the final judgment.",
+      idealist: "The four beasts depict the beastly, predatory character of godless world empires in every era; the Little Horn embodies recurring state-sponsored blasphemy and persecution against God's saints, answered by the enthroned Son of Man (Matt 26:64).",
+      consensus: "Jesus explicitly identifies Himself as Daniel's 'Son of Man' (Matthew 24:30; 26:64; Revelation 1:7, 13) who receives everlasting dominion from the Father over all peoples, nations, and languages."
+    },
+    {
+      topic: "daniel",
+      title: "3. Daniel's Seventy Weeks, Messiah the Prince & the Desolator",
+      ref: { book: "Daniel", ch: 9, from: 24, to: 27, label: "Daniel 9:24–27" },
+      cat: "Disputed",
+      futurist: "69 weeks (483 years) ran from Artaxerxes' decree to Messiah the Prince's presentation and crucifixion ('Messiah shall be cut off', Dan 9:26), followed by Jerusalem's AD 70 destruction. A prophetic gap separates the 69th and future 70th week—a final 7-year covenant made by the future Antichrist ('the prince that shall come', Dan 9:27) broken at the midpoint (3½ years).",
+      preterist: "All 70 weeks (490 years) ran consecutively without a gap. Messiah the Prince Himself confirmed the covenant in the 70th week; His atoning death in the midst of the week ('cause the sacrifice and the oblation to cease', Heb 10:9–14) led to the AD 70 desolation of the Temple by Titus' Roman armies (Luke 21:20).",
+      historicist: "490 literal years (utilizing the year-day principle from Ezra's 457 BC decree) ran continuously to Christ's baptism (AD 27), crucifixion in the midst of the 70th week (AD 31), and the gospel going to the Gentiles (AD 34), with Rome executing the subsequent desolation of Jerusalem.",
+      idealist: "A theological sabbath-jubilee structure (70 × 7) proclaiming that in the fullness of time Messiah accomplishes six redemptive goals (Dan 9:24)—finishing transgression, making reconciliation for iniquity, and bringing in everlasting righteousness—while judgment falls on covenant-breakers.",
+      consensus: "Christian interpreters across all traditions recognize Daniel 9:24–26 as the premier Old Testament time-prophecy pointing directly to the First Advent and atoning death of Jesus the Messiah."
+    },
+    {
+      topic: "daniel",
+      title: "4. Kings of the North & South, the Willful King & Michael Standing Up",
+      ref: { book: "Daniel", ch: 11, from: 31, to: 45, label: "Daniel 11:31–45; 12:1–3" },
+      cat: "Disputed",
+      futurist: "Daniel 11:2–35 was fulfilled in Persian, Alexandrian, Ptolemaic, and Seleucid history up to Antiochus IV Epiphanes (a type of Antichrist), while Daniel 11:36–45 leaps forward to the end-time Willful King (Antichrist) and the Great Tribulation of Daniel 12:1.",
+      preterist: "Fulfilled continuously from Persia and Greece through Antiochus IV, the Maccabees, and Herod the Great / 1st-century Roman rule in Judea, culminating in the unparalleled distress of the AD 66–70 Jewish War (Dan 12:1, 7; Matt 24:21).",
+      historicist: "Traces the continuous geopolitical sequence from Persia, Greece, Ptolemies/Seleucids, Pagan Rome, Papal/Imperial power, and Ottoman/modern Middle Eastern conflicts leading up to the resurrection of the dead (Dan 12:2).",
+      idealist: "Illustrates how arrogant rulers who exalt themselves above every god (Dan 11:36; cf. 2 Thess 2:4) inevitably come to their end with 'none to help him' (Dan 11:45), while those written in God's book shine as the stars forever (Dan 12:1–3).",
+      consensus: "Daniel 12:2 ('many of them that sleep in the dust of the earth shall awake, some to everlasting life...') is a foundational Old Testament revelation of the bodily resurrection and final judgment (cf. John 5:28–29)."
+    },
+    {
+      topic: "olivet-paul",
+      title: "5. The Olivet Discourse: Abomination of Desolation & Coming of the Son of Man",
+      ref: { book: "Matthew", ch: 24, from: 15, to: 31, label: "Matthew 24:15–31 (cf. Mark 13, Luke 21)" },
+      cat: "Disputed",
+      futurist: "Addresses the end-time Great Tribulation: a future rebuilt Jerusalem temple is desecrated by the Antichrist (Matt 24:15; 2 Thess 2:4), triggering 3½ years of unprecedented global distress terminated by the visible, bodily Second Coming of Christ and gathering of the elect (Matt 24:29–31).",
+      preterist: "Answers the disciples' question regarding the Temple stones (Matt 24:1–3, 34 'this generation shall not pass'): fulfilled in the Roman siege and destruction of Jerusalem and the Temple in AD 70 (Luke 21:20), with cosmic language echoing Isaiah 13:10 / 19:1 for covenant judgment, while Matt 24:36ff transitions to the final Parousia.",
+      historicist: "Sees dual or progressive fulfillment: initial fulfillment in the AD 70 Roman destruction of Jerusalem (Luke 21:20–24 'until the times of the Gentiles be fulfilled'), followed by the long tribulation of the Church Age and cosmic signs preceding Christ's return.",
+      idealist: "Views the AD 70 fall of Jerusalem as a historical type and microcosm of the final judgment at the end of the world; Jesus' warnings against false Christs, lawlessness, and spiritual slumber apply to every generation awaiting His bodily return.",
+      consensus: "All orthodox views affirm that Jesus' words verified His true prophetic office in the AD 70 fall of the Second Temple AND guarantee His personal, visible, bodily return at the end of the age (Acts 1:11)."
+    },
+    {
+      topic: "olivet-paul",
+      title: "6. The Rapture & Resurrection ('Caught Up Together in the Clouds')",
+      ref: { book: "1 Thessalonians", ch: 4, from: 15, to: 18, label: "1 Thessalonians 4:15–18 (cf. 1 Cor 15:51–55)" },
+      cat: "Future",
+      futurist: "Describes the bodily translation ('caught up' / Greek harpazo / Latin rapturo) of living believers and resurrection of dead saints. Pre-Tribulationists place this before the 7-year Tribulation (1 Thess 1:10; 5:9; Rev 3:10); Mid-Trib/Pre-Wrath and Historic Post-Tribulation Premillennialists place it during or at the close of the Tribulation.",
+      preterist: "Orthodox Partial Preterists affirm 1 Thessalonians 4:15–17 and 1 Corinthians 15:51–55 as the still-future bodily resurrection of the dead and transformation of living believers at Christ's final bodily Second Coming at the end of history.",
+      historicist: "Takes place at the single, visible, glorious Second Advent of Christ at the climax of world history, when the dead in Christ rise first and living saints are caught up to escort the returning King (Matt 25:6).",
+      idealist: "Theclimactic, literal, bodily resurrection and gathering of the universal Church to meet the descending Lord at the consummation of the age, forever uniting heaven and earth ('so shall we ever be with the Lord', 1 Thess 4:17).",
+      consensus: "Across all four orthodox traditions, 1 Thessalonians 4:16–17 and 1 Corinthians 15:51–54 describe a future, literal, bodily resurrection and immortal transformation of believers at the Lord's return."
+    },
+    {
+      topic: "olivet-paul",
+      title: "7. The Falling Away & The Man of Sin (Son of Perdition)",
+      ref: { book: "2 Thessalonians", ch: 2, from: 1, to: 10, label: "2 Thessalonians 2:1–10" },
+      cat: "Disputed",
+      futurist: "A future end-time apostasy ('falling away') and the unveiling of the personal final Antichrist ('man of sin'), who sits in a rebuilt temple claiming to be God after the Restrainer (the Holy Spirit/Church or civil order) is taken out of the way, and is destroyed by the brightness of Christ's coming (2 Thess 2:8).",
+      preterist: "Identified with 1st-century Jewish rebellion/zealotry or a Roman emperor (such as Nero/Caligula) or corrupt high-priestly leadership in the Jerusalem Temple prior to AD 70, restrained temporarily by Roman law and judged in the fiery fall of Jerusalem.",
+      historicist: "Classic Protestant Reformers (Luther, Calvin, Westminster Confession, Newton, Gill) identified the 'restrainer' as the Roman Emperorship and the 'man of sin' sitting in the temple of God (the professing Church) as the succession of the medieval papal dynasty, consumed by the preaching of the Word and Christ's final Parousia.",
+      idealist: "Represents the recurring principle of lawlessness ('the mystery of iniquity doth already work', 2 Thess 2:7) and deceptive pseudo-religious tyranny that arises throughout history and culminates in a final outburst of rebellion just before Christ's return.",
+      consensus: "All views agree that lawlessness was already at work in Paul's day (2 Thess 2:7; 1 John 2:18) and that Christ effortlessly vanquishes the Man of Sin 'with the spirit of his mouth, and shall destroy with the brightness of his coming' (2 Thess 2:8)."
+    },
+    {
+      topic: "revelation",
+      title: "8. The Seven Seals & Four Horsemen of the Apocalypse",
+      ref: { book: "Revelation", ch: 6, from: 1, to: 17, label: "Revelation 6:1–17" },
+      cat: "Disputed",
+      futurist: "Opened by the Lamb at the beginning of the future 7-year Tribulation: White Horse = false peace/conquest of Antichrist; Red = war; Black = famine/inflation; Pale = death of a fourth of the earth; 5th Seal = Tribulation martyrs; 6th Seal = cosmic terror preceding the Day of the Lord's wrath.",
+      preterist: "Depicts the events leading into the AD 66–70 Jewish-Roman War (paralleling Matthew 24:5–14): false messiahs, civil bloodshed in Judea, severe famine in besieged Jerusalem, pestilence, Neronian/Jewish martyrdoms of Christians, and the collapse of the Old Covenant world order.",
+      historicist: "Chronicles the history of the Roman Empire from the 1st to 4th centuries AD: golden age of Antonine conquests (White), civil wars of the barracks emperors (Red), fiscal oppression/famine under Caracalla (Black), mortality under Decius/Gallienus (Pale), Diocletian martyrdoms (5th Seal), and Constantine's upheaval of paganism (6th Seal).",
+      idealist: "A panoramic vision of the entire inter-advent Church Age: Christ's gospel going forth to conquer (or counterfeit ideological conquest) amidst the recurring judgments of war, economic scarcity, pestilence, and martyrdom until the final shaking of heaven and earth.",
+      consensus: "Every seal is opened exclusively by the worthy Lamb who was slain (Revelation 5:5–9), proving that history's trials and judgments are never outside the sovereign hand of Jesus Christ."
+    },
+    {
+      topic: "revelation",
+      title: "9. The 144,000 Sealed of Israel & the Great Multitude",
+      ref: { book: "Revelation", ch: 7, from: 1, to: 17, label: "Revelation 7:1–17 (cf. Rev 14:1–5)" },
+      cat: "Disputed",
+      futurist: "144,000 literal Jewish servants of God (12,000 from each of the 12 tribes listed in Rev 7:4–8) supernaturally sealed and protected during the Great Tribulation to evangelize the nations, resulting in the innumerable Gentile multitude saved out of the Great Tribulation (Rev 7:9–14).",
+      preterist: "The faithful 1st-century Jewish-Christian remnant ('the Israel of God', Gal 6:16) sealed by God so they escaped the AD 70 destruction of Jerusalem (fleeing to Pella as Jesus commanded in Matt 24:16), paired with the global Church of all nations.",
+      historicist: "Symbolic completeness (12 × 12 × 1,000) of God's elect faithful Church preserved through the dark ages of apostasy and persecution, contrasted with the universal multitude glorified in heaven.",
+      idealist: "The same redeemed Church viewed from two angles: first as the militant Church on earth numbered like Israel's census army (7:1–8, spiritually complete and sealed by the Holy Spirit, Eph 1:13), and second as the triumphant, uncountable multi-ethnic Church in glory (7:9–17).",
+      consensus: "All views celebrate Revelation 7:9–17: salvation belongs to our God and to the Lamb, who washes His people's robes white in His blood and wipes away all tears from their eyes."
+    },
+    {
+      topic: "revelation",
+      title: "10. The Seven Trumpets & Three Woes",
+      ref: { book: "Revelation", ch: 8, from: 6, to: 13, label: "Revelation 8:6–9:21; 11:15–19" },
+      cat: "Disputed",
+      futurist: "Literal catastrophic judgments poured out during the middle/second half of the future Tribulation in answer to the prayers of the saints (Rev 8:3–5): ecological devastation of a third of trees/seas/waters/sun, demonic locusts from the bottomless pit (5th Trumpet), and a 200-million-strong army at the Euphrates (6th Trumpet), culminating in Christ's kingdom (7th Trumpet, 11:15).",
+      preterist: "Covenant warning blasts (like Jericho's seven trumpets) heralding the progressive Roman devastation of Galilee, Perea, Idumea, and Judea (AD 67–70), the internal terror of the Zealot/Idumean factions ('locusts'), and the Roman legions from the Euphrates besieging Jerusalem.",
+      historicist: "Waves of historical judgments that brought down the Western and Eastern Roman Empires: Gothic/Vandal/Hunnic invasions under Alaric, Genseric, Attila, and Odoacer (Trumpets 1–4), followed by the rise of the Saracen/Arabian conquests (5th Trumpet) and Ottoman Turkish expansion across the Euphrates (6th Trumpet).",
+      idealist: "Patterned on the plagues of Egypt (hail, blood, darkness, locusts), the Trumpets are God's partial judgments ('a third part') warning the rebellious world throughout history that human civilization is fragile and summoning sinners to repent before the final 7th Trumpet (Rev 9:20–21; 11:15).",
+      consensus: "At the sounding of the Seventh Trumpet (Revelation 11:15), all traditions unite in the declaration: 'The kingdoms of this world are become the kingdoms of our Lord, and of his Christ; and he shall reign for ever and ever.'"
+    },
+    {
+      topic: "revelation",
+      title: "11. The Measured Temple & the Two Witnesses",
+      ref: { book: "Revelation", ch: 11, from: 1, to: 12, label: "Revelation 11:1–12" },
+      cat: "Disputed",
+      futurist: "A rebuilt Jerusalem temple during the Tribulation, and two literal end-time prophets (often identified with Moses and Elijah, or Enoch and Elijah, cf. Mal 4:5; Matt 17:11) who prophesy in sackcloth for 1,260 literal days, are slain by the Beast, and bodily resurrect and ascend after 3½ days in full view of the world.",
+      preterist: "The Herodian Temple measured prior to its AD 70 fall, and prophetic/apostolic witness (such as Peter & Paul, or James & Ananus, or the Law & Prophets) testifying in 1st-century Jerusalem ('where also our Lord was crucified', Rev 11:8) before the city's judgment.",
+      historicist: "The measuring of the true inner Church (the Reformation), and the Two Witnesses—the Old & New Testaments and the faithful line of gospel witnesses (such as the Waldenses and Reformers)—testifying in sackcloth during 1,260 years of papal dominance before their public revival.",
+      idealist: "Drawn from Zechariah 4 (the two olive trees and two lampstands), the Two Witnesses symbolize the witnessing Church throughout the entire gospel age, empowered by the Spirit like Moses (turning water to blood) and Elijah (shutting heaven), indestructible until their testimony is finished.",
+      consensus: "God's prophetic Word and witness cannot be permanently silenced: even when the world rejoices over its apparent defeat, God's breath of life raises His testimony in triumph (Rev 11:11)."
+    },
+    {
+      topic: "revelation",
+      title: "12. The Woman Clothed with the Sun, the Red Dragon & War in Heaven",
+      ref: { book: "Revelation", ch: 12, from: 1, to: 17, label: "Revelation 12:1–17" },
+      cat: "Partial / ongoing",
+      futurist: "The Woman is covenant Israel (cf. Joseph's dream of sun, moon, and 12 stars in Gen 37:9) who gives birth to the Messiah (12:5); in the middle of the future Tribulation, Michael casts Satan down to earth (12:7–9), and God shelters the Jewish remnant in the wilderness for 1,260 literal days (3½ years, 12:6, 14).",
+      preterist: "The faithful Messianic community brings forth Christ, who ascends to God's throne (12:5); Satan is cast down by Christ's cross/ascension (John 12:31; Luke 10:18) and instigates fierce 1st-century persecution, while Jewish believers flee Jerusalem into the wilderness for 3½ years during the AD 66–70 war.",
+      historicist: "The true Church travailing under pagan Imperial Rome (the seven-headed dragon), sheltered in the spiritual wilderness during 1,260 prophetic years of medieval persecution while nourished by the Word of God.",
+      idealist: "A sweeping cosmic theology of Genesis 3:15: the covenant people of God give birth to the Messiah; Satan, defeated at Calvary and the Ascension (12:5, 10–11), wages relentless war against the Church ('the remnant of her seed') throughout the entire gospel age while God spiritually nourishes His people.",
+      consensus: "All four views agree that the Man Child caught up to God's throne is Jesus Christ (Rev 12:5), the Dragon is Satan ('that old serpent', Rev 12:9), and believers overcome him 'by the blood of the Lamb, and by the word of their testimony' (Rev 12:11)."
+    },
+    {
+      topic: "revelation",
+      title: "13. The Beast Out of the Sea, the False Prophet & 666",
+      ref: { book: "Revelation", ch: 13, from: 1, to: 18, label: "Revelation 13:1–18" },
+      cat: "Disputed",
+      futurist: "The Sea Beast is the future end-time world dictator (Antichrist) and his revived empire exercising global authority for 42 literal months; the Earth Beast is the False Prophet (Rev 19:20) who performs counterfeit miracles and enforces worship and the literal economic Mark of the Beast (666).",
+      preterist: "The Sea Beast is the 1st-century Roman Empire and specifically Nero Caesar (whose Hebrew transliteration Nrwn Qsr sums to 666 in gematria, and who persecuted Christians for 42 months AD 64–68), assisted by the Earth Beast (the imperial cult priesthood in Asia Minor or corrupt Judean authorities).",
+      historicist: "The Sea Beast represents the political-religious dominion of the medieval Roman papacy reigning 42 prophetic months (1,260 years), with Latin/Greek titles such as Lateinos or Vicarius Filii Dei summing to 666, supported by the ecclesiastical hierarchy (the two-horned beast).",
+      idealist: "The Sea Beast symbolizes anti-Christian state totalitarianism and deified political power in every century; the Earth Beast (False Prophet) symbolizes false religion/ideology that pressures believers to compromise (taking the 'mark' on hand/actions and forehead/mind, contrast Deut 6:8 and Rev 14:1); 666 is the triple repetition of human imperfection (6 falling short of divine 7).",
+      consensus: "All views call believers to patient endurance and unyielding loyalty to Jesus Christ, refusing to give Caesar, the state, or any idolatrous system the worship that belongs to God alone (Rev 13:10; 14:12)."
+    },
+    {
+      topic: "revelation",
+      title: "14. The Seven Golden Vials (Bowls) of Wrath & Armageddon",
+      ref: { book: "Revelation", ch: 16, from: 1, to: 21, label: "Revelation 16:1–21" },
+      cat: "Disputed",
+      futurist: "The final, rapid-fire literal plagues of God's wrath at the close of the Great Tribulation—painful sores, seas/rivers turned to blood, scorching sun, darkness on the Beast's seat, the drying of the Euphrates, and the gathering of world armies to the Valley of Megiddo (Armageddon, 16:16) for destruction at Christ's return (Rev 19:11–21).",
+      preterist: "The final outpouring of covenant wrath upon apostate 1st-century Jerusalem and Judea in AD 70 (or upon persecuting Rome), with 'Armageddon' ('Mountain of Megiddo') evoking Old Testament battlefields of decisive judgment (Judges 5:19; 2 Kings 23:29; Zech 12:11).",
+      historicist: "The judgments poured out upon European Christendom and the Ottoman Empire from the late 18th century onward (beginning with the French Revolution, secularization of papal states, and decline of the Ottoman 'Euphrates' power), preparing the world for the final conflict.",
+      idealist: "Total, unmitigated final judgments (unlike the 1/3 Trumpets) modeling the plagues of Exodus and the fall of Babylon—showing how God brings every rebellious world system to final collapse at the Last Day ('It is done', Rev 16:17).",
+      consensus: "In the midst of the 6th Vial, Christ speaks directly to every reader across all ages: 'Behold, I come as a thief. Blessed is he that watcheth, and keepeth his garments' (Revelation 16:15)."
+    },
+    {
+      topic: "revelation",
+      title: "15. Mystery Babylon the Great & the Woman on the Scarlet Beast",
+      ref: { book: "Revelation", ch: 17, from: 1, to: 18, label: "Revelation 17:1–18; 18:1–24" },
+      cat: "Disputed",
+      futurist: "An end-time apostate world religious and commercial system—centered in a rebuilt Babylon, Rome ('seven mountains', 17:9), or global capital—that rides the Beast during the first half of the Tribulation before being destroyed by the ten kings and the Beast (17:16) and judged by God (ch. 18).",
+      preterist: "Identified either as 1st-century Pagan Rome (the city on seven hills ruling over the kings of the earth, 17:9, 18) OR apostate 1st-century Jerusalem (called 'the great city' in Rev 11:8, guilty of the blood of prophets and saints, 17:6; 18:24; Matt 23:35–37), burned by Roman forces in AD 70.",
+      historicist: "Identified by historic Protestant commentators as Papal Rome seated on the seven hills (17:9), clothed in purple and scarlet, and intoxicated with the blood of the martyrs of Jesus (17:6) across the medieval and Reformation eras.",
+      idealist: "The seductiveness of the idolatrous world-city in every age—luxury, economic arrogance, moral compromise, and persecution of the saints—standing in direct antithesis to the pure Bride, the New Jerusalem (Rev 19:7–8; 21:2).",
+      consensus: "God's command in Revelation 18:4 ('Come out of her, my people, that ye be not partakers of her sins') summons Christians in every generation to spiritual separation from worldly idolatry and corruption."
+    },
+    {
+      topic: "millennium",
+      title: "16. The 1,000-Year Millennium, Binding of Satan & New Jerusalem",
+      ref: { book: "Revelation", ch: 20, from: 1, to: 15, label: "Revelation 20:1–15; 21:1–5" },
+      cat: "Future",
+      futurist: "Premillennialism: After Christ's bodily Second Coming (Rev 19:11–21), Satan is literally bound in the bottomless pit for a future 1,000-year earthly reign of Christ and His resurrected saints (Rev 20:1–6), fulfilling OT kingdom promises (Isa 2, 11, 65; Zech 14), followed by Gog/Magog's final defeat, the Great White Throne, and New Heaven & New Earth (Rev 21–22).",
+      preterist: "Usually paired with Amillennialism or Postmillennialism: Satan was bound at Christ's First Advent/Cross so he could no longer deceive the Gentile nations from receiving the gospel (Matt 12:29; Luke 10:18; John 12:31–32); the 'thousand years' is the present Church Age reign of Christ (and departed saints in heaven), ending with Christ's future bodily return and the Great White Throne Judgment (Rev 20:11–15).",
+      historicist: "Held by both Historic Premillennialists (expecting a future 1,000-year reign after the Second Advent) and Postmillennialists (expecting a golden age of global gospel triumph before Christ's return).",
+      idealist: "Amillennialism: The 'thousand years' (10 × 10 × 10, symbolic completeness) spans the entire era between Christ's First and Second Comings, during which Satan's power to prevent global evangelism is restrained and martyred saints live and reign with Christ in heaven ('the first resurrection', 20:4–6) prior to the bodily resurrection and New Creation (Rev 21–22).",
+      consensus: "All orthodox Christians (Premillennial, Amillennial, and Postmillennial) affirm the Nicene Creed and Revelation 19–22: Christ's personal, bodily, glorious return, the bodily resurrection of the dead, the final judgment of Satan and the wicked at the Great White Throne, and eternal life in the New Heaven and New Earth."
+    }
+  ];
+
+  const eschatologySearchInput = document.getElementById("eschatologySearchInput");
+  const eschatologyTopicSelect = document.getElementById("eschatologyTopicSelect");
+  const eschatologyTraditionSelect = document.getElementById("eschatologyTraditionSelect");
+  const eschatologyResetBtn = document.getElementById("eschatologyResetBtn");
+  const eschatologyExportBtn = document.getElementById("eschatologyExportBtn");
+  const eschatologyTraditionLegend = document.getElementById("eschatologyTraditionLegend");
+  const eschatologyBanner = document.getElementById("eschatologyBanner");
+  const eschatologyListBody = document.getElementById("eschatologyListBody");
+
+  function renderEschatologyMode() {
+    if (!eschatologyListBody) return;
+    const topicVal = eschatologyTopicSelect && eschatologyTopicSelect.value ? eschatologyTopicSelect.value : "all";
+    const tradVal = eschatologyTraditionSelect && eschatologyTraditionSelect.value ? eschatologyTraditionSelect.value : "all";
+    const q = eschatologySearchInput ? eschatologySearchInput.value.trim().toLowerCase() : "";
+
+    if (eschatologyTraditionLegend) {
+      eschatologyTraditionLegend.innerHTML = "";
+      for (const t of ESCHATOLOGY_TRADITIONS) {
+        const card = document.createElement("div");
+        card.className = `eschatology-legend-card trad-${t.key}` + (tradVal === t.key ? " active" : "");
+        card.title = "Click to focus on this interpretive tradition (click again to show all 4 side by side)";
+        card.innerHTML =
+          `<div style="font-weight:bold;margin-bottom:4px;">${escapeHTML(t.title)}</div>` +
+          `<div style="color:var(--gray);">${escapeHTML(t.summary)}</div>`;
+        card.addEventListener("click", () => {
+          if (eschatologyTraditionSelect) {
+            eschatologyTraditionSelect.value = eschatologyTraditionSelect.value === t.key ? "all" : t.key;
+            renderEschatologyMode();
+          }
+        });
+        eschatologyTraditionLegend.appendChild(card);
+      }
+    }
+
+    const filtered = ESCHATOLOGY_COMPARISONS.filter(item => {
+      if (topicVal !== "all" && item.topic !== topicVal) return false;
+      if (q) {
+        const hay = `${item.title} ${item.ref.label} ${item.futurist} ${item.preterist} ${item.historicist} ${item.idealist} ${item.consensus}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    if (eschatologyBanner) {
+      const tradLabel = tradVal === "all"
+        ? "All 4 Historic Christian Interpretive Traditions Side-by-Side"
+        : (ESCHATOLOGY_TRADITIONS.find(t => t.key === tradVal)?.title || "");
+      eschatologyBanner.innerHTML =
+        `<div>` +
+          `<span class="bible-chapter-title">🏛️ 4-View Eschatology &amp; Apocalyptic Comparison (${filtered.length} Passages)</span>` +
+          `<span class="bible-chapter-sub">${escapeHTML(tradLabel)} · Click any scripture reference to open in KJV Bible Mode</span>` +
+        `</div>`;
+    }
+
+    eschatologyListBody.textContent = "Loading KJV apocalyptic passages…";
+    loadVerseData()
+      .then(() => {
+        eschatologyListBody.innerHTML = "";
+        if (!filtered.length) {
+          const empty = document.createElement("p");
+          empty.className = "verse-note";
+          empty.textContent = "No eschatology comparison passages match the current search and filter.";
+          eschatologyListBody.appendChild(empty);
+          return;
+        }
+
+        const linkify = typeof window.__linkifyReferencesHtml === "function"
+          ? window.__linkifyReferencesHtml
+          : escapeHTML;
+
+        for (const item of filtered) {
+          const card = document.createElement("div");
+          card.className = "harmony-card";
+
+          const head = document.createElement("div");
+          head.className = "harmony-card-head";
+          const leftHead = document.createElement("div");
+          leftHead.style.display = "flex";
+          leftHead.style.alignItems = "center";
+          leftHead.style.gap = "10px";
+          leftHead.style.flexWrap = "wrap";
+          const titleSpan = document.createElement("span");
+          titleSpan.textContent = item.title;
+          const refBtn = document.createElement("span");
+          refBtn.className = "harmony-pane-ref";
+          refBtn.textContent = `📖 ${item.ref.label} ↗`;
+          refBtn.title = `Open ${item.ref.book} ${item.ref.ch}:${item.ref.from} in Bible Mode`;
+          refBtn.addEventListener("click", () => {
+            window.__openInBibleMode(item.ref.book, item.ref.ch, item.ref.from, true);
+          });
+          leftHead.appendChild(titleSpan);
+          leftHead.appendChild(refBtn);
+
+          const catBadge = document.createElement("span");
+          catBadge.className = `badge ${badgeClass(item.cat)}`;
+          catBadge.textContent = item.cat;
+
+          head.appendChild(leftHead);
+          head.appendChild(catBadge);
+          card.appendChild(head);
+
+          // KJV Anchor Verse Text Box
+          const verseWrap = document.createElement("div");
+          verseWrap.style.padding = "10px 14px";
+          verseWrap.style.borderBottom = "1px solid var(--border)";
+          const vBox = document.createElement("div");
+          vBox.className = "harmony-verse-box";
+          vBox.style.marginTop = "0";
+          vBox.textContent =
+            getPassageVerseTextString(item.ref.book, item.ref.ch, item.ref.from, item.ref.to) ||
+            item.ref.label;
+          verseWrap.appendChild(vBox);
+          card.appendChild(verseWrap);
+
+          // 4-Column (or focused 1-Column) Tradition Grid
+          const activeTrads = tradVal === "all"
+            ? ESCHATOLOGY_TRADITIONS
+            : ESCHATOLOGY_TRADITIONS.filter(t => t.key === tradVal);
+          const grid = document.createElement("div");
+          grid.className = activeTrads.length === 1 ? "eschatology-grid-1" : "eschatology-grid-4";
+
+          for (const t of activeTrads) {
+            const col = document.createElement("div");
+            col.className = `eschatology-view-col col-${t.key}`;
+            const colHead = document.createElement("div");
+            colHead.className = "eschatology-view-head";
+            colHead.textContent = t.badge;
+            const colBody = document.createElement("div");
+            colBody.innerHTML = linkify(item[t.key]);
+            col.appendChild(colHead);
+            col.appendChild(colBody);
+            grid.appendChild(col);
+          }
+          card.appendChild(grid);
+
+          // Orthodox Consensus Box
+          const consensus = document.createElement("div");
+          consensus.className = "eschatology-consensus-box";
+          consensus.innerHTML = `<strong>🤝 Historic Christian Consensus:</strong> ${linkify(item.consensus)}`;
+          card.appendChild(consensus);
+
+          eschatologyListBody.appendChild(card);
+        }
+      })
+      .catch(err => {
+        eschatologyListBody.textContent = err.message;
+      });
+  }
+
+  if (eschatologyListBody) {
+    eschatologyListBody.addEventListener("click", ev => {
+      const xrefLink = ev.target && ev.target.closest ? ev.target.closest(".table-xref-link") : null;
+      if (xrefLink && xrefLink.dataset.refBook) {
+        ev.stopPropagation();
+        window.__openInBibleMode(
+          xrefLink.dataset.refBook,
+          Number(xrefLink.dataset.refChapter) || 1,
+          Number(xrefLink.dataset.refFrom) || 1,
+          true
+        );
+      }
+    });
+  }
+  if (eschatologySearchInput) {
+    eschatologySearchInput.addEventListener("input", renderEschatologyMode);
+  }
+  if (eschatologyTopicSelect) {
+    eschatologyTopicSelect.addEventListener("change", renderEschatologyMode);
+  }
+  if (eschatologyTraditionSelect) {
+    eschatologyTraditionSelect.addEventListener("change", renderEschatologyMode);
+  }
+  if (eschatologyResetBtn) {
+    eschatologyResetBtn.addEventListener("click", () => {
+      if (eschatologySearchInput) eschatologySearchInput.value = "";
+      if (eschatologyTopicSelect) eschatologyTopicSelect.value = "all";
+      if (eschatologyTraditionSelect) eschatologyTraditionSelect.value = "all";
+      renderEschatologyMode();
+    });
+  }
+  if (eschatologyExportBtn) {
+    eschatologyExportBtn.addEventListener("click", () => {
+      loadVerseData().then(() => {
+        const lines = [
+          "# KJV 4-View Eschatology & Apocalyptic Comparison Guide",
+          "Comparing Futurist, Preterist, Historicist, and Idealist interpretations across 16 major biblical passages.",
+          ""
+        ];
+        for (const item of ESCHATOLOGY_COMPARISONS) {
+          const vText = getPassageVerseTextString(item.ref.book, item.ref.ch, item.ref.from, item.ref.to);
+          lines.push(`## ${item.title} (${item.ref.label}) [${item.cat}]`);
+          if (vText) lines.push(`> ${vText} (KJV)`);
+          lines.push("");
+          lines.push(`- **🔮 Futurist View:** ${item.futurist}`);
+          lines.push(`- **🏛️ Preterist View:** ${item.preterist}`);
+          lines.push(`- **📜 Historicist View:** ${item.historicist}`);
+          lines.push(`- **🕊️ Idealist View:** ${item.idealist}`);
+          lines.push(`- **🤝 Historic Christian Consensus:** ${item.consensus}`);
+          lines.push("");
+        }
+        triggerTextDownload(
+          "kjv-4-view-eschatology-comparison.md",
+          lines.join("\r\n"),
+          "text/markdown;charset=utf-8;"
+        );
+        showToast("📄 Downloaded 4-View Eschatology Guide (.md)");
+      });
+    });
+  }
+
+  /*
    * Features 3, 4, 5 & 6:
    * - Step 3: Personal Study Workspace (Bookmarks, Notes & 1,189-Chapter Progress)
    * - Step 4: 66-Book Prophetic Heatmap & Top Chapters Leaderboard
@@ -25219,7 +25816,7 @@
       } else if (m === "concordance") {
         if (w) openWordInConcordance(w);
         else setViewMode("concordance");
-      } else if (m === "timeline" || m === "harmony" || m === "studyhub") {
+      } else if (m === "timeline" || m === "harmony" || m === "eschatology" || m === "studyhub") {
         setViewMode(m);
       }
     }

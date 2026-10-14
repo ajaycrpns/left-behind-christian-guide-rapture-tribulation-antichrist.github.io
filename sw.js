@@ -3,7 +3,7 @@
  * Caches the application shell and full 31,102-verse KJV dataset (kjv-verses.json)
  * so all 7 study modes work 100% offline after initial load.
  */
-const CACHE_NAME = "kjv-prophecy-tracker-v1";
+const CACHE_NAME = "kjv-prophecy-tracker-v2";
 const CORE_ASSETS = [
   "./",
   "./index.html",
