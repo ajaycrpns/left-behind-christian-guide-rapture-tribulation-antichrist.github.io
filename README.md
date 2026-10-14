@@ -39,8 +39,8 @@ covering all 66 books of the King James Bible from Genesis 1 to Revelation 22.
     Prophetic Chapters Leaderboard, 4 checkable Guided Prophetic Study Plans (with **📄 Markdown
     Study Plans handout download**), and a Personal Study Workspace (⭐ Bookmarks, 📝 Personal
     Study Notes, ✅ 1,189-Chapter KJV Reading Progress, and **💾 JSON Backup Export & Restore**).
-  - **🎲 Random Prophecy, 🔗 Deep-Link URL Share, 🖨️ Print / PDF Handout, ⚙️ Collapsible Filters & 🌙 Dark Mode:**
-    Built into the sticky top bar with `localStorage` and URL hash persistence.
+  - **🎲 Random Prophecy, 🔗 Deep-Link URL Share, 🖨️ Print / PDF Handout, 📲 Offline-First Installable PWA, ⚙️ Collapsible Filters & 🌙 Dark Mode:**
+    Built into the sticky top bar with `localStorage`, Service Worker `CacheStorage` (`sw.js`), Web App Manifest (`manifest.json`), and URL hash persistence.
 - **16,250 prose cross-references + 100% 31,102-verse KJV cross-reference & concordance coverage** —
   every authored row carries verse-level cross-references (`Cross-references: <ch>:<v> → <Ref1>, <Ref2>; ...`)
   and verse-level concordances (`Concordances: <ch>:<v> → <word1>, <word2>, <word3>; ...`)
@@ -58,8 +58,11 @@ covering all 66 books of the King James Bible from Genesis 1 to Revelation 22.
 
 | File | Purpose |
 |---|---|
-| `index.html` | The whole application (Tracker Mode, Bible Mode, Split View, Concordance Mode). Styles, data packs and logic are inline; there is no build step. |
-| `kjv-verses.json` | Complete 66-book, 1,189-chapter, 31,102-verse KJV Bible text + per-verse cross-references (`pair[2]`) + per-verse concordance key words (`pair[3]`) (`6,689 KB` raw / `1,967 KB` gzipped), fetched on demand for the Scripture panel, Bible Mode, and Concordance Mode. |
+| `index.html` | The whole application (7 View Modes: Tracker, Bible Mode, Split View, Concordance, Prophetic Timeline, OT↔NT Harmony, and Study Hub & Heatmap). Styles, data packs and logic are inline; there is no build step. |
+| `kjv-verses.json` | Complete 66-book, 1,189-chapter, 31,102-verse KJV Bible text + per-verse cross-references (`pair[2]`) + per-verse concordance key words (`pair[3]`) (`6,693 KB` raw / `1,975 KB` gzipped), fetched on demand and cached for offline use. |
+| `manifest.json` | Web App Manifest enabling standalone PWA installation on desktop, Android, and iOS. |
+| `sw.js` | Offline-first Service Worker pre-caching the app shell and full 31,102-verse KJV dataset (`kjv-verses.json`) in `CacheStorage`. |
+| `icon.svg` | Scalable vector KJV 66 Bible & Prophecy app icon (`192x192` / `512x512` / `any maskable`). |
 | `tools/build-verse-text.mjs` | Regenerates `kjv-verses.json` from `index.html`, the canonical KJV text, and the KJV cross-reference dataset. |
 | `tools/audit.mjs` | Verifies the data (1,822 explicit rows / 2,300 total rows, 16,250 prose cross-references, 7,850 verse-slots with `>= 2` cross-references and `>= 2` concordances, and 31,102 verses + cross-references + concordances in `kjv-verses.json`). No dependencies, no network. |
 | `tools/test-gate.mjs` | Breaks a copy of the tracker 17 ways (18 checks total) and checks the audit refuses each one. |

@@ -1,0 +1,20 @@
+{
+  "name": "KJV Prophecy Tracker — Complete 66-Book Bible, Cross-References & Concordance",
+  "short_name": "KJV Prophecy",
+  "description": "Offline-first chapter-by-chapter KJV Biblical Prophecy Tracker (2,300 rows), 31,102-verse KJV Bible Reader, Exhaustive Concordance, Prophetic Timeline, OT-NT Harmony, and Study Hub.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#1d4ed8",
+  "categories": ["books", "education", "reference"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512 any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -3,6 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1d4ed8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KJV Prophecy">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
   <title>KJV Prophecy Tracker — Genesis</title>
   <style>
     :root {
@@ -2418,6 +2425,9 @@
       </button>
       <button id="printViewBtn" type="button" class="utility-pill-btn" title="Print current view or save as PDF study handout">
         🖨️ Print
+      </button>
+      <button id="offlineStatusBtn" type="button" class="utility-pill-btn" title="Install as an offline-first app or cache all 31,102 KJV verses for offline study">
+        📲 Offline Ready
       </button>
       <button id="toggleFiltersBtn" type="button" class="utility-pill-btn" aria-expanded="true" title="Show or hide Tracker filter controls">
         ⚙️ Filters ▾
@@ -25214,6 +25224,113 @@
       }
     }
   } catch (_) {}
+
+  /*
+   * Offline-First Installable Web App (PWA + Service Worker + CacheStorage)
+   */
+  const offlineStatusBtn = document.getElementById("offlineStatusBtn");
+  let deferredInstallPrompt = null;
+  let swOfflineCached = false;
+
+  function updateOfflineButtonState() {
+    if (!offlineStatusBtn) return;
+    const isOffline = typeof navigator !== "undefined" && navigator.onLine === false;
+    if (isOffline) {
+      offlineStatusBtn.textContent = "📴 Offline Mode";
+      offlineStatusBtn.classList.add("active");
+      offlineStatusBtn.title = "Working offline from cached 66-book KJV Bible & Prophecy dataset";
+    } else if (deferredInstallPrompt) {
+      offlineStatusBtn.textContent = "📲 Install App";
+      offlineStatusBtn.classList.add("active");
+      offlineStatusBtn.title = "Install KJV Prophecy Tracker as a standalone offline app";
+    } else if (swOfflineCached) {
+      offlineStatusBtn.textContent = "📶 Offline Ready ✓";
+      offlineStatusBtn.classList.add("active");
+      offlineStatusBtn.title = "All 66 KJV books (31,102 verses) and 2,300 prophecy rows are cached for offline use";
+    } else {
+      offlineStatusBtn.textContent = "📲 Cache Offline";
+      offlineStatusBtn.title = "Click to cache all 31,102 KJV verses for 100% offline study";
+    }
+  }
+
+  window.addEventListener("beforeinstallprompt", ev => {
+    ev.preventDefault();
+    deferredInstallPrompt = ev;
+    updateOfflineButtonState();
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    swOfflineCached = true;
+    updateOfflineButtonState();
+    showToast("📲 KJV Prophecy Tracker installed for offline study!");
+  });
+
+  window.addEventListener("online", () => {
+    updateOfflineButtonState();
+    showToast("📶 Back online");
+  });
+
+  window.addEventListener("offline", () => {
+    updateOfflineButtonState();
+    showToast("📴 Offline mode active — using cached 31,102-verse KJV Bible");
+  });
+
+  if (typeof navigator !== "undefined" && navigator.serviceWorker) {
+    navigator.serviceWorker
+      .register("sw.js")
+      .then(reg => {
+        swOfflineCached = true;
+        updateOfflineButtonState();
+        const worker = reg.active || reg.waiting || reg.installing;
+        if (worker && typeof worker.postMessage === "function") {
+          worker.postMessage({ type: "CACHE_ALL_OFFLINE" });
+        }
+      })
+      .catch(() => {});
+
+    if (typeof navigator.serviceWorker.addEventListener === "function") {
+      navigator.serviceWorker.addEventListener("message", ev => {
+        if (ev.data && ev.data.type === "OFFLINE_CACHE_READY") {
+          swOfflineCached = true;
+          updateOfflineButtonState();
+        }
+      });
+    }
+  }
+
+  if (offlineStatusBtn) {
+    offlineStatusBtn.addEventListener("click", () => {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.finally(() => {
+          deferredInstallPrompt = null;
+          updateOfflineButtonState();
+        });
+        return;
+      }
+      loadVerseData()
+        .then(() => {
+          swOfflineCached = true;
+          if (
+            typeof navigator !== "undefined" &&
+            navigator.serviceWorker &&
+            navigator.serviceWorker.controller
+          ) {
+            navigator.serviceWorker.controller.postMessage({ type: "CACHE_ALL_OFFLINE" });
+          }
+          updateOfflineButtonState();
+          showToast(
+            "✅ All 66 Books (31,102 KJV verses) cached for 100% offline use! Use your browser menu ('Install App' / 'Add to Home Screen') to install."
+          );
+        })
+        .catch(() => {
+          showToast("📴 Using cached offline dataset");
+        });
+    });
+  }
+
+  updateOfflineButtonState();
 })();
 </script>
 </body>
