@@ -139,11 +139,14 @@ method. The largest of these were checked individually and left alone:
 
 ## Reader feature added with this pass
 
-`kjv-verses.json` carries the KJV text for all 8,430 cited verses (1.2 MB raw, 375 KB
-gzipped) and is fetched only when a reader first opens a row, so the table still starts
-without it. Verified against the whole table: **all 1,805 rows that cite a passage resolve
-to stored text — 0 unresolved**. The panel degrades to a readable message if the file is
-unavailable, and the table keeps working.
+`kjv-verses.json` carries the full KJV text, verse-by-verse cross-references (`pair[2]`), and
+verse-by-verse concordance key words (`pair[3]`) for all **31,102 verses across all 66 books and
+1,189 chapters** (6,693 KB raw, 1,975 KB gzipped) and is fetched only when a reader first opens a
+row or switches to Bible, Split, Concordance, Harmony, or Study Hub views, so the table still
+starts without it. Verified against the whole table: **all 1,805 rows that cite a passage resolve
+to stored text (`7,850 / 7,850` prophecy verse-slots and `31,102 / 31,102` Bible verses verified)
+— 0 unresolved**. The panel degrades to a readable message if the file is unavailable, and the
+table keeps working.
 
 ## Fourth pass — the checks are now automatic
 
@@ -209,6 +212,9 @@ above were re-run with the table set to "All" and still pass.
 
 ## Re-running the audit
 
-The audit script set (parses `index.html` with acorn, renders it with jsdom, validates every
-citation against the KJV, and diffs placeholder chapters against tracked parallels) lives
-outside the repo at `/tmp/audit/` and is not committed.
+Run the committed verification suite directly from the repository root:
+
+```bash
+node tools/audit.mjs
+node tools/test-gate.mjs
+```

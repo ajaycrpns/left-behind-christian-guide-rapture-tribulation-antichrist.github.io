@@ -8,16 +8,49 @@ covering all 66 books of the King James Bible from Genesis 1 to Revelation 22.
 
 ## What it does
 
-- **2,300 rows** — every chapter of the Bible is represented. Chapters with no explicit
-  prophecy say so rather than being skipped.
-- **Filters** — search, book, chapter, status category, and a "prophecy entries only"
-  toggle. The CSV export always covers every row the filters match, not just the page
-  on screen.
+- **2,300 rows across 66 books / 1,189 chapters** — every chapter of the Bible is
+  represented. Chapters with no explicit prophecy say so rather than being skipped.
+- **7 View Modes + Study Utilities (`#viewModeBar`)**:
+  - **📊 Prophecy Tracker:** Full filterable table with 8 interactive summary cards,
+    search scope selector, canon section filter, book/chapter/theme filters, multi-select
+    status category checkboxes + presets, and 9 quick filter/display checkboxes.
+  - **📖 Bible Mode (KJV):** Complete 66-book, 1,189-chapter, 31,102-verse King James
+    Bible reader with color-coded prophetic verse highlighting, inline prophecy &
+    fulfillment commentary cards, per-verse cross-reference & concordance chips, ⭐ bookmark
+    and 📋 1-click verse citation copy buttons, ✅ 1,189-chapter read tracker, **🔊 Audio Bible
+    Reader (`Read Aloud` with play/pause/stop, speed control, and live verse-by-verse highlight)**,
+    chapter grid, paragraph layout toggle, font-size controls, bottom chapter navigation bar,
+    and full-Bible search.
+  - **⚖️ Split View:** Side-by-side Prophecy Tracker table and KJV Bible
+    Reader; clicking any row in the Tracker syncs the Bible Reader to that chapter and verse.
+  - **📚 Concordance Mode:** Exhaustive A–Z KJV word concordance
+    across all 31,102 verses plus a 48-entry Hebrew (`H...`) / Greek (`G...`) Strong's
+    Prophetic Key-Term Lexicon, with OT/NT/Prophetic occurrence counts, First & Last Mention
+    links, book distribution pills, and KWIC highlighted verse results.
+  - **🕰️ Prophetic Timeline:** Interactive 12-era chronological prophetic map from
+    Eden (`Gen 3:15`) and the Patriarchal/Davidic Covenants through Daniel's 70 Weeks, the First
+    Advent, the Rapture, 7 Seals, 7 Trumpets, Antichrist, 7 Vials, Second Coming, 1,000-Year
+    Millennium, and New Jerusalem (`Rev 21–22`).
+  - **🔗 OT↔NT Harmony:** Side-by-side Old Testament Prediction and New Testament
+    Fulfillment/Parallel cards with the full KJV verse text of both passages rendered side by side
+    (25 curated Landmark Messianic & Apocalyptic Harmonies + all dynamic OT-to-NT pairs) and
+    **📄 Markdown Study Guide (`.md`) download**.
+  - **🗺️ Study Hub & Heatmap:** Interactive 66-Book Prophetic Density Heatmap & Top 18
+    Prophetic Chapters Leaderboard, 4 checkable Guided Prophetic Study Plans (with **📄 Markdown
+    Study Plans handout download**), and a Personal Study Workspace (⭐ Bookmarks, 📝 Personal
+    Study Notes, ✅ 1,189-Chapter KJV Reading Progress, and **💾 JSON Backup Export & Restore**).
+  - **🎲 Random Prophecy, 🔗 Deep-Link URL Share, 🖨️ Print / PDF Handout, ⚙️ Collapsible Filters & 🌙 Dark Mode:**
+    Built into the sticky top bar with `localStorage` and URL hash persistence.
+- **16,250 prose cross-references + 100% 31,102-verse KJV cross-reference & concordance coverage** —
+  every authored row carries verse-level cross-references (`Cross-references: <ch>:<v> → <Ref1>, <Ref2>; ...`)
+  and verse-level concordances (`Concordances: <ch>:<v> → <word1>, <word2>, <word3>; ...`)
+  with at least 2 cross-references and 2 concordance words per verse, and all 31,102 verses in
+  `kjv-verses.json` include verified cross-references (`pair[2]`) and concordance key words (`pair[3]`)
+  so every single verse across the entire 66-book Bible displays clickable cross-reference and
+  concordance chips.
 - **Paging** — the table draws 200 rows at a time (selectable: 100 / 200 / 500 / All).
   Drawing all 2,300 at once cost about half a second per interaction and 21,000 DOM
   elements; a page draws in roughly 30 ms and printing still covers everything.
-- **Read the verses** — open any row to read the KJV text it cites. References quoted in
-  a row's own commentary appear as chips you can click to jump to them.
 - **Keyboard** — Tab into the table, then use ↑ ↓ Home End to move and Enter or Space to
   open a passage. Escape closes it.
 
@@ -25,11 +58,11 @@ covering all 66 books of the King James Bible from Genesis 1 to Revelation 22.
 
 | File | Purpose |
 |---|---|
-| `index.html` | The whole application. Styles, data packs and logic are inline; there is no build step. |
-| `kjv-verses.json` | KJV text for every verse the tracker cites, fetched only when a reader first opens a row. |
-| `tools/build-verse-text.mjs` | Regenerates `kjv-verses.json` from `index.html`. |
-| `tools/audit.mjs` | Verifies the data. No dependencies, no network. |
-| `tools/test-gate.mjs` | Breaks a copy of the tracker a dozen ways and checks the audit refuses each one. |
+| `index.html` | The whole application (Tracker Mode, Bible Mode, Split View, Concordance Mode). Styles, data packs and logic are inline; there is no build step. |
+| `kjv-verses.json` | Complete 66-book, 1,189-chapter, 31,102-verse KJV Bible text + per-verse cross-references (`pair[2]`) + per-verse concordance key words (`pair[3]`) (`6,689 KB` raw / `1,967 KB` gzipped), fetched on demand for the Scripture panel, Bible Mode, and Concordance Mode. |
+| `tools/build-verse-text.mjs` | Regenerates `kjv-verses.json` from `index.html`, the canonical KJV text, and the KJV cross-reference dataset. |
+| `tools/audit.mjs` | Verifies the data (1,822 explicit rows / 2,300 total rows, 16,250 prose cross-references, 7,850 verse-slots with `>= 2` cross-references and `>= 2` concordances, and 31,102 verses + cross-references + concordances in `kjv-verses.json`). No dependencies, no network. |
+| `tools/test-gate.mjs` | Breaks a copy of the tracker 17 ways (18 checks total) and checks the audit refuses each one. |
 | `tools/scan-oracles.mjs` | Advisory sweep for prophecy missed in chapters marked "no prophecy". |
 | `tools/kjv-structure.json` | Canonical chapter and verse counts, so the audit needs no download. |
 | `PROPHECY-AUDIT.md` | Record of the verse-level audits: what was missing, what was fixed, and what was checked. |
@@ -47,9 +80,8 @@ node tools/build-verse-text.mjs --source ./kjv     # or point it at an existing 
 The source is the public-domain KJV from
 [aruljohn/Bible-kjv](https://github.com/aruljohn/Bible-kjv), one JSON file per book.
 
-Only cited verses are included, which keeps the file at roughly 1.2 MB raw / 375 KB
-gzipped instead of the whole Bible's 4 MB. If a reference is ever missing from the panel,
-the row will say so and the fix is to re-run the generator.
+All 31,102 KJV verses across all 66 books and 1,189 chapters (`4,252 KB` raw / `1,242 KB`
+gzipped) are included in `kjv-verses.json` so Bible Mode, Concordance Mode, and every row citation resolve locally.
 
 ## Data packs
 
@@ -92,6 +124,8 @@ It fails on:
 - a chapter holding both a real row and an auto-fill placeholder
 - a repeated passage, or several "no prophecy" rows in one chapter
 - one verse described as both past and future (except deliberate `61:2a` / `61:2b` splits)
+- a prophecy row with no cross-references in its commentary
+- a chapter in `kjv-verses.json` whose verses are not in ascending order, or invalid JSON
 - a cited verse with no text in `kjv-verses.json`
 
 `.github/workflows/audit.yml` runs it on every push and pull request, then regenerates the
@@ -114,6 +148,7 @@ Pushing to `main` triggers `.github/workflows/static.yml`, which publishes the r
 root to GitHub Pages. Because `index.html` fetches `kjv-verses.json` by relative path,
 both files must be published together — and `tools/` is uploaded too but never requested.
 
-A separate workflow, `.github/workflows/audit.yml`, runs on pushes and pull requests.
-It does not currently gate the deploy; to make it gate, add
-`- run: node tools/audit.mjs` as a step in `static.yml` before the upload.
+A separate workflow, `.github/workflows/audit.yml`, runs the full verification suite
+(`audit.mjs`, `test-gate.mjs`, and `kjv-verses.json` drift check) on pushes and pull
+requests, and `.github/workflows/static.yml` runs `node tools/audit.mjs` before uploading
+the Pages artifact so broken data is never deployed.
